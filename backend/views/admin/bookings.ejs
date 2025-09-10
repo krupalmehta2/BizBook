@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>All Bookings | Admin | BizBook</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #3498db;
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e1e1e1;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #ecf0f1;
+      color: #34495e;
+    }
+
+    tr:hover {
+      background-color: #f2faff;
+    }
+
+    button {
+      padding: 6px 12px;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 13px;
+      margin-right: 4px;
+    }
+
+    .delete-btn { background-color: #e74c3c; }
+    .delete-btn:hover { background-color: #c0392b; }
+
+    .done-btn { background-color: #27ae60; }
+    .done-btn:hover { background-color: #1e8449; }
+
+    .cancel-btn { background-color: #e67e22; }
+    .cancel-btn:hover { background-color: #ca6f1e; }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 12px;
+      display: inline-block;
+    }
+
+    .badge-pending { background-color: #fff3cd; color: #856404; }
+    .badge-done { background-color: #d4edda; color: #155724; }
+    .badge-cancelled { background-color: #f8d7da; color: #721c24; }
+
+    .center {
+      text-align: center;
+      margin-top: 50px;
+      color: #7f8c8d;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📋 All Bookings</h2>
+  <a href="/admin/dashboard">← Back to Dashboard</a>
+
+  <% if (bookings.length > 0) { %>
+    <table>
+      <tr>
+        <th>User</th>
+        <th>Business</th>
+        <th>Type</th>
+        <th>Product</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Table No.</th>
+        <th>Guests</th>
+        <th>Note</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+      <% bookings.forEach(b => { %>
+        <tr>
+          <td><%= b.userId?.name || 'N/A' %></td>
+          <td><%= b.businessId?.name || 'N/A' %></td>
+          <td>
+            <% if (b.type === 'table') { %> 🪑 Table
+            <% } else if (b.type === 'appointment') { %> 💼 Appointment
+            <% } else { %> 📦 Order <% } %>
+          </td>
+          <td><%= b.productId?.name || '-' %></td>
+          <td><%= b.bookingDate ? new Date(b.bookingDate).toLocaleDateString('en-IN', { dateStyle: 'medium' }) : '-' %></td>
+          <td><%= b.bookingTime || '-' %></td>
+          <td><%= b.type === 'table' ? (b.tableNumber || '-') : '-' %></td>
+          <td><%= b.type === 'table' ? (b.guests || '-') : '-' %></td>
+          <td><%= b.note || '-' %></td>
+          <td>
+            <% if (b.status === 'Done') { %>
+              <span class="badge badge-done">Done</span>
+            <% } else if (b.status === 'Cancelled') { %>
+              <span class="badge badge-cancelled">Cancelled</span>
+            <% } else { %>
+              <span class="badge badge-pending">Pending</span>
+            <% } %>
+          </td>
+          <td>
+            <form method="POST" action="/admin/bookings/<%= b._id %>/delete" style="display:inline;" onsubmit="return confirm('Delete this booking?')">
+              <button type="submit" class="delete-btn">Delete</button>
+            </form>
+
+            <form method="POST" action="/admin/bookings/<%= b._id %>/status" style="display:inline;">
+              <input type="hidden" name="status" value="Done" />
+              <button type="submit" class="done-btn">Done</button>
+            </form>
+
+            <form method="POST" action="/admin/bookings/<%= b._id %>/status" style="display:inline;">
+              <input type="hidden" name="status" value="Cancelled" />
+              <button type="submit" class="cancel-btn">Cancel</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </table>
+  <% } else { %>
+    <p class="center">No bookings available.</p>
+  <% } %>
+
+</body>
+</html>

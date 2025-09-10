@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Businesses</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h2 {
+      color: #333;
+    }
+    a {
+      margin-right: 10px;
+      text-decoration: none;
+      color: #007bff;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    .actions form {
+      display: inline;
+    }
+    .top-links {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h2>All Businesses</h2>
+  
+  <div class="top-links">
+    <a href="/admin/dashboard">← Back to Dashboard</a>
+    <a href="/admin/businesses/new">➕ Add New Business</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Type</th>
+        <th>Contact</th>
+        <th>Address</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% businesses.forEach(b => { %>
+        <tr>
+          <td><%= b.name %></td>
+          <td><%= b.category?.name || b.category %></td>
+          <td><%= b.type %></td>
+          <td><%= b.contact %></td>
+          <td><%= b.address %></td>
+          <td class="actions">
+            <a href="/admin/businesses/<%= b._id %>/edit">✏️ Edit</a>
+            <form method="POST" action="/admin/businesses/<%= b._id %>/delete" onsubmit="return confirm('Are you sure you want to delete this business?');">
+              <button type="submit">🗑️ Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

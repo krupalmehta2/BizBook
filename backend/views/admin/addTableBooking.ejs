@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Appointment | Admin</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      max-width: 500px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 600;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover { background-color: #2980b9; }
+
+    .error { color: #e74c3c; font-weight: bold; margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+
+<h1>📅 Add Appointment</h1>
+
+<% if (error) { %>
+  <div class="error"><%= error %></div>
+<% } %>
+
+<form id="appointmentForm">
+  <label>User:</label>
+  <select name="userId" required>
+    <option value="">Select User</option>
+    <% users.forEach(user => { %>
+      <option value="<%= user._id %>"><%= user.name %> (<%= user.email %>)</option>
+    <% }) %>
+  </select>
+
+  <label>Business:</label>
+  <select name="businessId" required>
+    <option value="">Select Business</option>
+    <% businesses.forEach(business => { %>
+      <option value="<%= business._id %>"><%= business.name %></option>
+    <% }) %>
+  </select>
+
+  <label>Booking Date:</label>
+  <input type="date" name="bookingDate" required>
+
+  <label>Booking Time:</label>
+  <input type="time" name="bookingTime" required>
+
+  <label>Special Note:</label>
+  <textarea name="note" placeholder="Optional"></textarea>
+
+  <input type="hidden" name="status" value="pending">
+
+  <button type="submit">Save Appointment</button>
+</form>
+
+<script>
+  const form = document.getElementById('appointmentForm');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    // Validate required fields
+    const required = ['userId', 'businessId', 'bookingDate', 'bookingTime'];
+    for (let field of required) {
+      if (!data[field]) {
+        alert('❌ Please fill all required fields.');
+        return;
+      }
+    }
+
+    try {
+      const response = await fetch('/admin/bookings/appointments/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(result.message || '✅ Appointment created successfully!');
+        form.reset();
+        window.location.href = '/admin/bookings/appointments';
+      } else {
+        alert('❌ Failed: ' + (result.message || 'Unknown error'));
+      }
+    } catch (err) {
+      alert('❌ Network or server error: ' + err.message);
+    }
+  });
+</script>
+
+</body>
+</html>

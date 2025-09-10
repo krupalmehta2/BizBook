@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Products</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fa;
+      padding: 40px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      margin: 30px auto;
+      border-collapse: collapse;
+      width: 90%;
+      max-width: 1000px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    button {
+      padding: 6px 12px;
+      background-color: #dc3545;
+      border: none;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: #c82333;
+    }
+
+    .top-links {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Products</h2>
+  <div class="top-links">
+    <a href="/admin/dashboard">← Back</a> |
+    <a href="/admin/products/new">➕ Add New Product</a>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price (₹)</th>
+        <th>Business</th>
+        <th>Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% products.forEach(p => { %>
+        <tr>
+          <td><%= p.name %></td>
+          <td><%= p.description %></td>
+          <td><%= p.price %></td>
+          <td><%= p.businessId?.name || 'N/A' %></td>
+          <td><%= p.type || 'N/A' %></td>
+          <td>
+            <form 
+              method="POST" 
+              action="/admin/products/<%= p._id %>/delete" 
+              onsubmit="return confirm('Delete this product?')"
+            >
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

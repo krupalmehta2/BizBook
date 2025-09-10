@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Product</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px 40px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+
+    h2 {
+      margin-top: 0;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    a {
+      display: block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      color: #007bff;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #28a745;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    .error {
+      color: red;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Add New Product</h2>
+    <a href="/admin/products">← Back to Products</a>
+
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+
+    <form method="POST" action="/admin/products">
+      <label>Product Name</label>
+      <input 
+        name="name" 
+        required 
+        placeholder="Enter product name" 
+        value="<%= old?.name || '' %>" 
+      />
+
+      <label>Description</label>
+      <textarea 
+        name="description" 
+        rows="3" 
+        placeholder="Enter description"
+      ><%= old?.description || '' %></textarea>
+
+      <label>Price (₹)</label>
+      <input 
+        name="price" 
+        type="number" 
+        step="0.01" 
+        required 
+        placeholder="Enter price" 
+        value="<%= old?.price || '' %>" 
+      />
+
+      <label>Business</label>
+      <select name="businessId" required>
+        <option value="">-- Select Business --</option>
+        <% businesses.forEach(b => { %>
+          <option 
+            value="<%= b._id %>" 
+            <%= old?.businessId == b._id ? 'selected' : '' %>
+          >
+            <%= b.name %>
+          </option>
+        <% }) %>
+      </select>
+
+      <label>Type</label>
+      <select name="type" required>
+        <option value="">-- Select Type --</option>
+        <option value="product" <%= old?.type === 'product' ? 'selected' : '' %>>Product</option>
+        <option value="service" <%= old?.type === 'service' ? 'selected' : '' %>>Service</option>
+      </select>
+
+      <button type="submit">Add Product</button>
+    </form>
+  </div>
+</body>
+</html>

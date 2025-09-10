@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= old && old._id ? "Edit Business" : "Add New Business" %></title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    form {
+      max-width: 600px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input {
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .error {
+      color: red;
+      margin-bottom: 15px;
+    }
+    .back-link {
+      display: block;
+      margin-bottom: 15px;
+      color: #007bff;
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <h2><%= old && old._id ? "Edit Business" : "Add New Business" %></h2>
+
+  <a href="/admin/businesses" class="back-link">← Back to Businesses</a>
+
+  <% if (error) { %>
+    <p class="error"><%= error %></p>
+  <% } %>
+
+  <form method="POST" action="<%= old && old._id ? '/admin/businesses/' + old._id : '/admin/businesses' %>">
+    <label>Name:</label>
+    <input type="text" name="name" value="<%= old.name || '' %>" required>
+
+    <label>Category:</label>
+    <input type="text" name="category" value="<%= old.category || '' %>" required>
+
+    <label>Type:</label>
+    <input type="text" name="type" value="<%= old.type || '' %>" required>
+
+    <label>Contact:</label>
+    <input type="text" name="contact" value="<%= old.contact || '' %>">
+
+    <label>Address:</label>
+    <input type="text" name="address" value="<%= old.address || '' %>">
+
+    <label>Email:</label>
+    <input type="email" name="email" value="<%= old.email || '' %>">
+
+    <label>Website:</label>
+    <input type="text" name="website" value="<%= old.website || '' %>">
+
+    <label>Opening Hours:</label>
+    <input type="text" name="openingHours" value="<%= old.openingHours || '' %>">
+
+    <label>Logo URL:</label>
+    <input type="text" name="logoUrl" value="<%= old.logoUrl || '' %>">
+
+    <!-- ✅ Social links -->
+    <label>Facebook:</label>
+    <input type="text" name="socialLinks[facebook]" value="<%= old.socialLinks ? old.socialLinks.facebook : '' %>">
+
+    <label>Instagram:</label>
+    <input type="text" name="socialLinks[instagram]" value="<%= old.socialLinks ? old.socialLinks.instagram : '' %>">
+
+    <label>Twitter:</label>
+    <input type="text" name="socialLinks[twitter]" value="<%= old.socialLinks ? old.socialLinks.twitter : '' %>">
+
+    <label>LinkedIn:</label>
+    <input type="text" name="socialLinks[linkedin]" value="<%= old.socialLinks ? old.socialLinks.linkedin : '' %>">
+
+    <button type="submit"><%= old && old._id ? "Update Business" : "Add Business" %></button>
+  </form>
+
+</body>
+</html>
